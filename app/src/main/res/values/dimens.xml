@@ -1,0 +1,16 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">0dp</dimen>
+    <dimen name="activity_vertical_margin">0dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nav_header_vertical_spacing">0dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+
+    <dimen name="navigationdrawer_account_height">140dp</dimen>
+    <dimen name="navigationdrawer_account_title_size">15sp</dimen>
+    <dimen name="navigationdrawer_account_description_size">15sp</dimen>
+    <dimen name="navigationdrawer_account_data_height">56dp</dimen>
+    <dimen name="navigationdrawer_account_account_picture_size">64dp</dimen>
+    <dimen name="navigationdrawer_account_arrow_size">24dp</dimen>
+</resources>
