@@ -15,7 +15,7 @@
  *
  */
 
-package com.mvolter.extremedoubanfm.views.adapters;
+package com.mvolter.extremedoubanfm.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

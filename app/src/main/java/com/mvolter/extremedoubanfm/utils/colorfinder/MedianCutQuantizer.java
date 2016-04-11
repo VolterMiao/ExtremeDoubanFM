@@ -352,7 +352,7 @@ public class MedianCutQuantizer {
 
     //	 ---  color dimensions ------------------------
 
-    // The main purpose of this enumeration class is associate
+    // The menu_activity_main purpose of this enumeration class is associate
     // the color dimensions with the corresponding comparators.
     enum ColorDimension {
         RED(new redComparator()),

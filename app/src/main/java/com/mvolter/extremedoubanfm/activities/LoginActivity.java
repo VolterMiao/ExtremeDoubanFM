@@ -15,7 +15,7 @@
  *
  */
 
-package com.mvolter.extremedoubanfm;
+package com.mvolter.extremedoubanfm.activities;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.mvolter.extremedoubanfm.R;
 import com.mvolter.extremedoubanfm.models.Account;
 import com.mvolter.extremedoubanfm.network.UrlAPI;
 import com.mvolter.extremedoubanfm.utils.AccountLocalStoreUtil;

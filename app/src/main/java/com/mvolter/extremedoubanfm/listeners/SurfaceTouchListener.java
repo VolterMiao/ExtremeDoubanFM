@@ -15,7 +15,7 @@
  *
  */
 
-package com.mvolter.extremedoubanfm.views.listeners;
+package com.mvolter.extremedoubanfm.listeners;
 
 import android.media.MediaPlayer;
 import android.support.design.widget.FloatingActionButton;

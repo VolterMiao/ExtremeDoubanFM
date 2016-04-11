@@ -15,7 +15,7 @@
  *
  */
 
-package com.mvolter.extremedoubanfm.views.widgets;
+package com.mvolter.extremedoubanfm.views;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -64,7 +64,7 @@ public class RoundedImageView extends ImageView {
      */
     private Bitmap drawableToBitmap(Drawable drawable) {
 
-        Bitmap bitmap = null;
+        Bitmap bitmap;
 
         // Drawable -> BitmapDrawable
         if(drawable instanceof BitmapDrawable) {
