@@ -27,7 +27,6 @@ public class ColorCalculatorInteractorImpl implements ColorCalculatorInteractor 
     @Override
     public ColorScheme getColorScheme(Bitmap image) {
         DominantColorCalculator calculator = new DominantColorCalculator(image);
-        ColorScheme scheme = calculator.getColorScheme();
-        return scheme;
+        return calculator.getColorScheme();
     }
 }

@@ -17,16 +17,16 @@
 
 package com.mvolter.extremedoubanfm.interfaces;
 
+import com.mvolter.extremedoubanfm.interactors.PlayerInteractorImpl;
 import com.mvolter.extremedoubanfm.models.SongInfo;
 
 public interface PlayerInteractor {
 
-    interface onSongChangedListener {
-
-        void onReturnNext(SongInfo info);
-
+    interface OnSongChangedListener {
+        void onPlayStateChanged(PlayerInteractorImpl.PlayState state);
     }
 
     void clickPlayeButton();
+    void doubleClickSurface();
     void playNext(SongInfo info);
 }

@@ -19,8 +19,10 @@ package com.mvolter.extremedoubanfm.interfaces;
 
 import android.view.MotionEvent;
 
+import com.mvolter.extremedoubanfm.models.SongInfo;
+
 public interface MainPresenter {
     void clickPlayButton();
-    void touchSurface(MotionEvent event);
+    boolean touchSurface(MotionEvent event);
     void onDestroy();
 }

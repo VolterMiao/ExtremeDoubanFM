@@ -31,16 +31,22 @@ public class PlayerInteractorImpl implements PlayerInteractor, MediaPlayer.OnCom
 
     private static final String TAG = "PlayerInteractorImpl";
 
+    public enum PlayState {
+        START, PAUSE, RESUME, STOP, COMPLETED
+    }
+
     private MediaPlayer mPlayer;
     private PlayList mPlayList;
     private PlayListMonitor mPlayListMonitor;
+    private OnSongChangedListener mListener;
 
-    public PlayerInteractorImpl() {
+    public PlayerInteractorImpl(OnSongChangedListener listener) {
         mPlayer = new MediaPlayer();
         mPlayer.setOnCompletionListener(this);
         mPlayList = new PlayList();
         mPlayListMonitor = new PlayListMonitor();
         mPlayList.setOnPlayListListener(mPlayListMonitor);
+        mListener = listener;
     }
 
     @Override
@@ -48,6 +54,18 @@ public class PlayerInteractorImpl implements PlayerInteractor, MediaPlayer.OnCom
         if (mPlayer.isPlaying()) {
             Log.i(TAG, "player is playing, reset it, play next song");
             mPlayer.reset();
+        }
+    }
+
+    @Override
+    public void doubleClickSurface() {
+        if (mPlayer != null) {
+            if (mPlayer.isPlaying()) {
+                mPlayer.pause();
+            } else {
+                mPlayer.start();
+            }
+            mListener.onPlayStateChanged(mPlayer.isPlaying() ? PlayState.START : PlayState.PAUSE);
         }
     }
 
@@ -65,6 +83,6 @@ public class PlayerInteractorImpl implements PlayerInteractor, MediaPlayer.OnCom
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-
+        mListener.onPlayStateChanged(PlayState.COMPLETED);
     }
 }

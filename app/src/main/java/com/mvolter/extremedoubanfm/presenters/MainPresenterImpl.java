@@ -31,7 +31,8 @@ import com.mvolter.extremedoubanfm.interfaces.SongInfoInteractor;
 import com.mvolter.extremedoubanfm.models.SongInfo;
 import com.mvolter.extremedoubanfm.utils.colorfinder.ColorScheme;
 
-public class MainPresenterImpl implements MainPresenter, PlayerInteractor.onSongChangedListener{
+public class MainPresenterImpl implements MainPresenter, PlayerInteractor.OnSongChangedListener {
+
     private MainView mMainView;
     private PlayerInteractor mPlayerInteractor;
     private SongInfoInteractor mSongInfoInteractor;
@@ -39,7 +40,7 @@ public class MainPresenterImpl implements MainPresenter, PlayerInteractor.onSong
 
     public MainPresenterImpl(MainView mainView) {
         this.mMainView = mainView;
-        this.mPlayerInteractor = new PlayerInteractorImpl();
+        this.mPlayerInteractor = new PlayerInteractorImpl(this);
         this.mSongInfoInteractor = new SongInfoInteractorImpl();
         this.mColorCalculatorInteractor = new ColorCalculatorInteractorImpl();
     }
@@ -51,21 +52,45 @@ public class MainPresenterImpl implements MainPresenter, PlayerInteractor.onSong
         SongInfo next = mSongInfoInteractor.getNextSongInfo();
         mPlayerInteractor.playNext(next);
 
-        onReturnNext(next);
+        updateUISongInfo(next);
+    }
+
+    private int count;
+    private long firClick;
+    private long secClick;
+
+    private void clear() {
+        count = 0;
+        firClick = 0;
+        secClick = 0;
     }
 
     @Override
-    public void touchSurface(MotionEvent event) {
+    public boolean touchSurface(MotionEvent event) {
+        if (MotionEvent.ACTION_DOWN == event.getAction()) {
+            if (firClick != 0 && System.currentTimeMillis() - firClick > 1000) {
+                count = 0;
+            }
 
+            count++;
+
+            if (count == 1) {
+                firClick = System.currentTimeMillis();
+            } else if (count == 2) {
+                secClick = System.currentTimeMillis();
+
+                if (secClick - firClick < 1000) {
+                    mPlayerInteractor.doubleClickSurface();
+                }
+
+                clear();
+            }
+        }
+
+        return false;
     }
 
-    @Override
-    public void onDestroy() {
-        mMainView = null;
-    }
-
-    @Override
-    public void onReturnNext(SongInfo info) {
+    private void updateUISongInfo(SongInfo info) {
         Bitmap surface = info.getSurface();
 
         mMainView.setSurfaceImage(surface);
@@ -79,4 +104,28 @@ public class MainPresenterImpl implements MainPresenter, PlayerInteractor.onSong
         mMainView.setArtistColorScheme(scheme.secondaryAccent);
     }
 
+    @Override
+    public void onPlayStateChanged(PlayerInteractorImpl.PlayState state) {
+
+        if(PlayerInteractorImpl.PlayState.COMPLETED == state) {
+            SongInfo next = mSongInfoInteractor.getNextSongInfo();
+            mPlayerInteractor.playNext(next);
+
+            updateUISongInfo(next);
+            return;
+        }
+
+        boolean clickable = false;
+
+        if(PlayerInteractorImpl.PlayState.START == state) {
+            clickable = true;
+        }
+
+        mMainView.setFloatingActionButtonClickable(clickable);
+    }
+
+    @Override
+    public void onDestroy() {
+        mMainView = null;
+    }
 }

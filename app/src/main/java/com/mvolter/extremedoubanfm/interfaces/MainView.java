@@ -27,4 +27,5 @@ public interface MainView {
     void setTitleColorScheme(int color);
     void setArtistColorScheme(int color);
     void setFloatingActionButtonColor(int color);
+    void setFloatingActionButtonClickable(boolean clickable);
 }

@@ -39,10 +39,7 @@ import android.widget.Toast;
 import com.mvolter.extremedoubanfm.R;
 import com.mvolter.extremedoubanfm.interfaces.MainPresenter;
 import com.mvolter.extremedoubanfm.interfaces.MainView;
-import com.mvolter.extremedoubanfm.listeners.SurfaceTouchListener;
-import com.mvolter.extremedoubanfm.models.PlayList;
 import com.mvolter.extremedoubanfm.presenters.MainPresenterImpl;
-import com.mvolter.extremedoubanfm.utils.PlayListMonitor;
 
 public class MainActivity extends AppCompatActivity
         implements MainView, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ImageView.OnTouchListener{
@@ -178,8 +175,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        mMainPresenter.touchSurface(event);
-        return true;
+        return mMainPresenter.touchSurface(event);
     }
 
     @Override
@@ -215,6 +211,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void setFloatingActionButtonColor(int color) {
         mFabBtn.setBackgroundColor(color);
+    }
+
+    @Override
+    public void setFloatingActionButtonClickable(boolean clickable) {
+        mFabBtn.setClickable(clickable);
     }
 
     @Override
