@@ -22,18 +22,20 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class SongInfo implements Parcelable{
-    public String url;
-    public String title;
-    public String artist;
-    public Bitmap surface;
+    private String url;
+    private String title;
+    private String artist;
+
+    private String surfaceUrl;
+    private Bitmap surface;
 
     public SongInfo() {}
 
-    public SongInfo(String url, String title, String artist, Bitmap surface) {
+    public SongInfo(String url, String title, String artist, String surfUrl) {
         this.url = url;
         this.title = title;
         this.artist = artist;
-        this.surface = surface;
+        this.surfaceUrl = surfUrl;
     }
 
     private SongInfo(Parcel in) {
@@ -41,6 +43,14 @@ public class SongInfo implements Parcelable{
         this.title = in.readString();
         this.artist = in.readString();
         this.surface = in.readParcelable(null);
+    }
+
+    public String getSurfaceUrl() {
+        return surfaceUrl;
+    }
+
+    public void setSurfaceUrl(String surfaceUrl) {
+        this.surfaceUrl = surfaceUrl;
     }
 
     public Bitmap getSurface() {

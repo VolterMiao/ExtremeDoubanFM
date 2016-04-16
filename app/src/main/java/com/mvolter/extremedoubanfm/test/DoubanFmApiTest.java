@@ -15,20 +15,20 @@
  *
  */
 
-package com.mvolter.extremedoubanfm.utils;
+package com.mvolter.extremedoubanfm.test;
 
+import android.graphics.Bitmap;
+import android.os.Handler;
+import android.test.InstrumentationTestCase;
+import android.util.Log;
 
-import com.mvolter.extremedoubanfm.models.PlayList;
-import com.mvolter.extremedoubanfm.network.UrlAPI;
+import com.mvolter.extremedoubanfm.network.DoubanFmApi;
 
-public class PlayListMonitor implements PlayList.OnPlayListListener {
-
-    @Override
-    public void onPlayListChanged(PlayList list) {
-
-        //check whether list is empty
-        if(list.isEmpty()) {
-            new Thread(new UrlAPI(list.h)).start();
-        }
+public class DoubanFmApiTest extends InstrumentationTestCase {
+    public void test() throws Exception {
+        final int expected = 1;
+        final int reality = 1;
+        assertEquals(expected, reality);
     }
+
 }

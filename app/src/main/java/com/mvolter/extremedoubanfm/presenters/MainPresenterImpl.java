@@ -31,28 +31,67 @@ import com.mvolter.extremedoubanfm.interfaces.SongInfoInteractor;
 import com.mvolter.extremedoubanfm.models.SongInfo;
 import com.mvolter.extremedoubanfm.utils.colorfinder.ColorScheme;
 
-public class MainPresenterImpl implements MainPresenter, PlayerInteractor.OnSongChangedListener {
+import android.os.Handler;
+import java.util.logging.LogRecord;
+
+public class MainPresenterImpl implements MainPresenter, PlayerInteractor.OnSongChangedListener,
+                    SongInfoInteractor.SongInfoInteractorResponse{
 
     private MainView mMainView;
     private PlayerInteractor mPlayerInteractor;
     private SongInfoInteractor mSongInfoInteractor;
     private ColorCalculatorInteractor mColorCalculatorInteractor;
 
+    private Handler mHandler = new Handler();
+
     public MainPresenterImpl(MainView mainView) {
         this.mMainView = mainView;
         this.mPlayerInteractor = new PlayerInteractorImpl(this);
-        this.mSongInfoInteractor = new SongInfoInteractorImpl();
+        this.mSongInfoInteractor = new SongInfoInteractorImpl(this);
         this.mColorCalculatorInteractor = new ColorCalculatorInteractorImpl();
     }
 
     @Override
     public void clickPlayButton() {
         mPlayerInteractor.clickPlayeButton();
+        mSongInfoInteractor.getNextSongInfo();
+    }
 
-        SongInfo next = mSongInfoInteractor.getNextSongInfo();
-        mPlayerInteractor.playNext(next);
+    @Override
+    public void onGetNextSongFinished(final SongInfo songInfo) {
+        mSongInfoInteractor.getNextSongSurface(songInfo);
+        mPlayerInteractor.playNext(songInfo);
 
-        updateUISongInfo(next);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                updateUISongInfo(songInfo);
+            }
+        });
+    }
+
+    @Override
+    public void onGetCaptchaIdFinished(String captchaId) {
+
+    }
+
+    @Override
+    public void onGetCaptchaPicFinished(Bitmap captchaPic) {
+
+    }
+
+    @Override
+    public void onGetSurfaceFinished(final Bitmap surface) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mMainView.setSurfaceImage(surface);
+                ColorScheme scheme = mColorCalculatorInteractor.getColorScheme(surface);
+                mMainView.setColorBarColor(scheme.primaryAccent);
+                mMainView.setTitleColorScheme(scheme.secondaryAccent);
+                mMainView.setArtistColorScheme(scheme.secondaryAccent);
+            }
+        });
     }
 
     private int count;
@@ -91,27 +130,15 @@ public class MainPresenterImpl implements MainPresenter, PlayerInteractor.OnSong
     }
 
     private void updateUISongInfo(SongInfo info) {
-        Bitmap surface = info.getSurface();
-
-        mMainView.setSurfaceImage(surface);
         mMainView.setTitleText(info.getTitle());
         mMainView.setArtistText(info.getArtist());
-
-        ColorScheme scheme = mColorCalculatorInteractor.getColorScheme(surface);
-
-        mMainView.setColorBarColor(scheme.primaryAccent);
-        mMainView.setTitleColorScheme(scheme.secondaryAccent);
-        mMainView.setArtistColorScheme(scheme.secondaryAccent);
     }
 
     @Override
     public void onPlayStateChanged(PlayerInteractorImpl.PlayState state) {
 
         if(PlayerInteractorImpl.PlayState.COMPLETED == state) {
-            SongInfo next = mSongInfoInteractor.getNextSongInfo();
-            mPlayerInteractor.playNext(next);
-
-            updateUISongInfo(next);
+            mSongInfoInteractor.getNextSongInfo();
             return;
         }
 

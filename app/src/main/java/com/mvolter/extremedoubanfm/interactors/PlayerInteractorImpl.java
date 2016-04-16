@@ -21,9 +21,7 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.mvolter.extremedoubanfm.interfaces.PlayerInteractor;
-import com.mvolter.extremedoubanfm.models.PlayList;
 import com.mvolter.extremedoubanfm.models.SongInfo;
-import com.mvolter.extremedoubanfm.utils.PlayListMonitor;
 
 import java.io.IOException;
 
@@ -36,16 +34,11 @@ public class PlayerInteractorImpl implements PlayerInteractor, MediaPlayer.OnCom
     }
 
     private MediaPlayer mPlayer;
-    private PlayList mPlayList;
-    private PlayListMonitor mPlayListMonitor;
     private OnSongChangedListener mListener;
 
     public PlayerInteractorImpl(OnSongChangedListener listener) {
         mPlayer = new MediaPlayer();
         mPlayer.setOnCompletionListener(this);
-        mPlayList = new PlayList();
-        mPlayListMonitor = new PlayListMonitor();
-        mPlayList.setOnPlayListListener(mPlayListMonitor);
         mListener = listener;
     }
 

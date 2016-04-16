@@ -20,9 +20,6 @@ package com.mvolter.extremedoubanfm.activities;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,9 +27,8 @@ import android.widget.ImageView;
 
 import com.mvolter.extremedoubanfm.R;
 import com.mvolter.extremedoubanfm.models.Account;
-import com.mvolter.extremedoubanfm.network.UrlAPI;
+import com.mvolter.extremedoubanfm.network.DoubanFmApi;
 import com.mvolter.extremedoubanfm.utils.AccountLocalStoreUtil;
-import com.mvolter.extremedoubanfm.utils.http.OkHttpUtil;
 
 public class LoginActivity extends Activity
         implements View.OnClickListener{
@@ -79,10 +75,10 @@ public class LoginActivity extends Activity
 
                     if(captchaImg.getVisibility() == ImageView.GONE) {
 
-                        String captchaId = UrlAPI.getCaptchaId();
-                        Bitmap captchaBmp = UrlAPI.getCaptcha(captchaId);
+                        //String captchaId = DoubanFmApi.getCaptchaId();
+                        //Bitmap captchaBmp = DoubanFmApi.getCaptcha(captchaId);
 
-                        captchaImg.setImageBitmap(captchaBmp);
+                        //captchaImg.setImageBitmap(captchaBmp);
                         captchaImg.setVisibility(ImageView.VISIBLE);
                         captchaSolutionEdt.setVisibility(EditText.VISIBLE);
                     } else {

@@ -17,8 +17,19 @@
 
 package com.mvolter.extremedoubanfm.interfaces;
 
+import android.graphics.Bitmap;
+
 import com.mvolter.extremedoubanfm.models.SongInfo;
 
 public interface SongInfoInteractor {
-    SongInfo getNextSongInfo();
+
+    interface SongInfoInteractorResponse {
+        void onGetNextSongFinished(SongInfo songInfo);
+        void onGetCaptchaIdFinished(String captchaId);
+        void onGetCaptchaPicFinished(Bitmap captchaPic);
+        void onGetSurfaceFinished(Bitmap surface);
+    }
+
+    void getNextSongInfo();
+    void getNextSongSurface(SongInfo info);
 }

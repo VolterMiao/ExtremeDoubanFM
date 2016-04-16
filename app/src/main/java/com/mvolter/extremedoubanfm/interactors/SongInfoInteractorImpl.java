@@ -19,10 +19,25 @@ package com.mvolter.extremedoubanfm.interactors;
 
 import com.mvolter.extremedoubanfm.interfaces.SongInfoInteractor;
 import com.mvolter.extremedoubanfm.models.SongInfo;
+import com.mvolter.extremedoubanfm.network.DoubanFmApi;
 
 public class SongInfoInteractorImpl implements SongInfoInteractor{
+
+    private DoubanFmApi mDoubanFmApi;
+    private SongInfoInteractorResponse mCallback;
+
+    public SongInfoInteractorImpl(SongInfoInteractorResponse callback) {
+        mCallback = callback;
+        mDoubanFmApi = new DoubanFmApi(mCallback);
+    }
+
     @Override
-    public SongInfo getNextSongInfo() {
-        return null;
+    public void getNextSongInfo() {
+        mDoubanFmApi.getNextSong();
+    }
+
+    @Override
+    public void getNextSongSurface(SongInfo info) {
+        mDoubanFmApi.getAlbumSurface(info.getSurfaceUrl());
     }
 }
