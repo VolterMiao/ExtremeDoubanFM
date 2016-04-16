@@ -22,11 +22,13 @@ import com.mvolter.extremedoubanfm.models.SongInfo;
 
 public interface PlayerInteractor {
 
-    interface OnSongChangedListener {
+    interface OnStateChangedListener {
         void onPlayStateChanged(PlayerInteractorImpl.PlayState state);
+        void onPlayProgressChanged(int progress);
     }
 
     void clickPlayeButton();
     void doubleClickSurface();
     void playNext(SongInfo info);
+    void updateProgressBar();
 }

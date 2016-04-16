@@ -19,7 +19,10 @@ package com.mvolter.extremedoubanfm.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,13 +30,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,11 +46,14 @@ import com.mvolter.extremedoubanfm.interfaces.MainView;
 import com.mvolter.extremedoubanfm.presenters.MainPresenterImpl;
 
 public class MainActivity extends AppCompatActivity
-        implements MainView, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ImageView.OnTouchListener{
+        implements MainView, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
+            ImageView.OnTouchListener, AppBarLayout.OnOffsetChangedListener{
 
     private static final String TAG = "MainActivity";
 
-    private Toolbar toolbar;
+    private AppBarLayout mAppBarLayout;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private Toolbar mToolbar;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -58,8 +64,9 @@ public class MainActivity extends AppCompatActivity
     private TextView mTitleTxt;
     private TextView mArtistTxt;
     private FloatingActionButton mFabBtn;
-
     private MainPresenter mMainPresenter;
+
+    private String mSongNameInAppBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +74,14 @@ public class MainActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
+        mAppBarLayout.addOnOffsetChangedListener(this);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
+        mCollapsingToolbarLayout.setClickable(false);
 
         mColorBarFrameLayout = (FrameLayout) findViewById(R.id.frame_layout_color_bar);
 
@@ -85,7 +98,7 @@ public class MainActivity extends AppCompatActivity
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this,
-                mDrawerLayout, toolbar, R.string.navigation_drawer_open,
+                mDrawerLayout, mToolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
@@ -94,6 +107,20 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         mMainPresenter = new MainPresenterImpl(this);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        if(verticalOffset == 0 ){
+            //Expanded
+            mCollapsingToolbarLayout.setTitle(null);
+        }else if(Math.abs(verticalOffset) >= mAppBarLayout.getTotalScrollRange()){
+            //Collapsed
+            mCollapsingToolbarLayout.setTitle(mSongNameInAppBar);
+        }else {
+            //Other
+            mCollapsingToolbarLayout.setTitle(null);
+        }
     }
 
     @Override
@@ -186,6 +213,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void setTitleText(String title) {
+        mSongNameInAppBar = title;
         mTitleTxt.setText(title);
     }
 

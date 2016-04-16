@@ -32,9 +32,8 @@ import com.mvolter.extremedoubanfm.models.SongInfo;
 import com.mvolter.extremedoubanfm.utils.colorfinder.ColorScheme;
 
 import android.os.Handler;
-import java.util.logging.LogRecord;
 
-public class MainPresenterImpl implements MainPresenter, PlayerInteractor.OnSongChangedListener,
+public class MainPresenterImpl implements MainPresenter, PlayerInteractor.OnStateChangedListener,
                     SongInfoInteractor.SongInfoInteractorResponse{
 
     private MainView mMainView;
@@ -149,6 +148,16 @@ public class MainPresenterImpl implements MainPresenter, PlayerInteractor.OnSong
         }
 
         mMainView.setFloatingActionButtonClickable(clickable);
+    }
+
+    @Override
+    public void onPlayProgressChanged(final int progress) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                //mMainView.setProgressBarProgress(progress);
+            }
+        });
     }
 
     @Override

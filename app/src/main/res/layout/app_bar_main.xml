@@ -6,27 +6,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context="com.mvolter.extremedoubanfm.activities.MainActivity">
 
-    <include
-        layout="@layout/content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </include>
-
     <android.support.design.widget.AppBarLayout
-        android:layout_height="wrap_content"
+        android:id="@+id/app_bar"
+        android:layout_height="350dp"
         android:layout_width="match_parent"
-        android:theme="@style/AppTheme.NoActionBar"
-        android:background="#00ffffff">
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            />
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:contentScrim="@color/colorPrimary"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <include
+                layout="@layout/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"/>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
+
+    <include
+        layout="@layout/fragment_lrc_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -34,8 +48,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_media_next"
-        app:layout_anchorGravity="bottom|right">
 
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="bottom|right|end">
     </android.support.design.widget.FloatingActionButton>
 
 </android.support.design.widget.CoordinatorLayout>

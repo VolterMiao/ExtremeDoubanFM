@@ -34,9 +34,9 @@ public class PlayerInteractorImpl implements PlayerInteractor, MediaPlayer.OnCom
     }
 
     private MediaPlayer mPlayer;
-    private OnSongChangedListener mListener;
+    private OnStateChangedListener mListener;
 
-    public PlayerInteractorImpl(OnSongChangedListener listener) {
+    public PlayerInteractorImpl(OnStateChangedListener listener) {
         mPlayer = new MediaPlayer();
         mPlayer.setOnCompletionListener(this);
         mListener = listener;
@@ -69,13 +69,36 @@ public class PlayerInteractorImpl implements PlayerInteractor, MediaPlayer.OnCom
             mPlayer.setDataSource(info.getUrl());
             mPlayer.prepare();
             mPlayer.start();
-        } catch (IOException e) {
 
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while(mPlayer.isPlaying()) {
+                        try {
+                            Thread.sleep(100);
+                            updateProgressBar();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            }).start();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
         mListener.onPlayStateChanged(PlayState.COMPLETED);
+    }
+
+    @Override
+    public void updateProgressBar() {
+        int currentPosition = mPlayer.getCurrentPosition();
+        int duration = mPlayer.getDuration();
+        int progress = (int)(1.0f * currentPosition / duration * 100);
+        mListener.onPlayProgressChanged(progress);
     }
 }
