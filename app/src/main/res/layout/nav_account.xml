@@ -7,6 +7,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/side_nav_bar"
         android:contentDescription="@null"
         android:scaleType="centerCrop"/>
 
@@ -27,7 +28,8 @@
             <com.mvolter.extremedoubanfm.views.widgets.RoundedImageView
                 android:id="@+id/navigation_drawer_account_picture"
                 android:layout_width="@dimen/navigationdrawer_account_account_picture_size"
-                android:layout_height="@dimen/navigationdrawer_account_account_picture_size" />
+                android:layout_height="@dimen/navigationdrawer_account_account_picture_size"
+                />
 
         </FrameLayout>
 
