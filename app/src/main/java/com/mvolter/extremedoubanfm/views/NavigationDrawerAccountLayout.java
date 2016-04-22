@@ -23,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mvolter.extremedoubanfm.adapters.NavigationDrawerAccountsMenuAdapter;
+import com.mvolter.extremedoubanfm.ui.adapter.NavigationDrawerAccountsMenuAdapter;
 import com.mvolter.extremedoubanfm.models.Account;
 
 public class NavigationDrawerAccountLayout extends LinearLayout{

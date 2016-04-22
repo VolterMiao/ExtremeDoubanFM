@@ -6,11 +6,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mvolter.extremedoubanfm.activities.MainActivity">
+    tools:context="com.mvolter.extremedoubanfm.ui.activity.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
-        android:layout_height="350dp"
+        android:layout_height="300dp"
         android:layout_width="match_parent"
         android:fitsSystemWindows="true">
 
@@ -20,12 +20,9 @@
             android:layout_height="match_parent"
             app:contentScrim="@color/colorPrimary"
             app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|enterAlways">
 
-            <include
-                layout="@layout/content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <include layout="@layout/content" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -36,11 +33,7 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include
-        layout="@layout/fragment_lrc_panel"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    <include layout="@layout/fragment_play_history" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -48,9 +41,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_media_next"
-
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|right|end">
+        android:layout_gravity="bottom|end"
+        app:layout_behavior="com.mvolter.extremedoubanfm.ScrollAwareFabBehavior">
     </android.support.design.widget.FloatingActionButton>
 
 </android.support.design.widget.CoordinatorLayout>

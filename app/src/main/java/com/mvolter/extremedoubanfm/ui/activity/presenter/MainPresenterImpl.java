@@ -15,7 +15,7 @@
  *
  */
 
-package com.mvolter.extremedoubanfm.presenters;
+package com.mvolter.extremedoubanfm.ui.activity.presenter;
 
 import android.graphics.Bitmap;
 import android.view.MotionEvent;

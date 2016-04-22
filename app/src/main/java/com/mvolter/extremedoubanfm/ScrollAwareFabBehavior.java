@@ -27,6 +27,8 @@ import android.view.View;
 
 public class ScrollAwareFabBehavior extends FloatingActionButton.Behavior {
 
+    private int currentDyConsumed = 0;
+
     public ScrollAwareFabBehavior(Context context, AttributeSet attrs) {
         super();
     }
@@ -49,9 +51,12 @@ public class ScrollAwareFabBehavior extends FloatingActionButton.Behavior {
     public void onNestedScroll(CoordinatorLayout coordinatorLayout, FloatingActionButton child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
 
-        if (dyConsumed > 0 && child.getVisibility() == View.VISIBLE) {
-            child.hide();
-        } else if(dyConsumed < 0 && child.getVisibility() != View.VISIBLE) {
+        if(dyConsumed != currentDyConsumed) {
+            currentDyConsumed = dyConsumed;
+            if(child.getVisibility() == View.VISIBLE) {
+                child.hide();
+            }
+        } else {
             child.show();
         }
     }

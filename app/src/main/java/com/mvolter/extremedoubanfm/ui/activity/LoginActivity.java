@@ -15,10 +15,9 @@
  *
  */
 
-package com.mvolter.extremedoubanfm.activities;
+package com.mvolter.extremedoubanfm.ui.activity;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +26,6 @@ import android.widget.ImageView;
 
 import com.mvolter.extremedoubanfm.R;
 import com.mvolter.extremedoubanfm.models.Account;
-import com.mvolter.extremedoubanfm.network.DoubanFmApi;
 import com.mvolter.extremedoubanfm.utils.AccountLocalStoreUtil;
 
 public class LoginActivity extends Activity

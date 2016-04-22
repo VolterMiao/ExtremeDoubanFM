@@ -15,11 +15,13 @@
  *
  */
 
-package com.mvolter.extremedoubanfm.activities;
+package com.mvolter.extremedoubanfm.ui.activity;
 
+import android.app.Application;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -29,6 +31,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,77 +41,97 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mvolter.extremedoubanfm.ApplicationComponent;
+import com.mvolter.extremedoubanfm.ApplicationModule;
+import com.mvolter.extremedoubanfm.DaggerApplicationComponent;
 import com.mvolter.extremedoubanfm.R;
+import com.mvolter.extremedoubanfm.ui.activity.component.DaggerMainActivityComponent;
+import com.mvolter.extremedoubanfm.ui.activity.component.MainActivityComponent;
+import com.mvolter.extremedoubanfm.ui.activity.module.MainActivityModule;
+import com.mvolter.extremedoubanfm.ui.adapter.MusicListAdapter;
 import com.mvolter.extremedoubanfm.interfaces.MainPresenter;
 import com.mvolter.extremedoubanfm.interfaces.MainView;
-import com.mvolter.extremedoubanfm.presenters.MainPresenterImpl;
+import com.mvolter.extremedoubanfm.ui.activity.presenter.MainPresenterImpl;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTouch;
+
 
 public class MainActivity extends AppCompatActivity
-        implements MainView, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
+        implements MainView, NavigationView.OnNavigationItemSelectedListener,
             ImageView.OnTouchListener, AppBarLayout.OnOffsetChangedListener{
 
     private static final String TAG = "MainActivity";
 
-    private AppBarLayout mAppBarLayout;
-    private CollapsingToolbarLayout mCollapsingToolbarLayout;
-    private Toolbar mToolbar;
-
-    private DrawerLayout mDrawerLayout;
+    private MainActivityComponent mMainActivityComponent;
     private ActionBarDrawerToggle mDrawerToggle;
-    private NavigationView navigationView;
-
-    private FrameLayout mColorBarFrameLayout;
-    private ImageView mSurfaceImg;
-    private TextView mTitleTxt;
-    private TextView mArtistTxt;
-    private FloatingActionButton mFabBtn;
-    private MainPresenter mMainPresenter;
-
     private String mSongNameInAppBar;
+
+    @Bind(R.id.app_bar) AppBarLayout mAppBarLayout;
+    @Bind(R.id.toolbar) Toolbar mToolbar;
+    @Bind(R.id.collapsing_toolbar_layout) CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @Bind(R.id.nav_view) NavigationView navigationView;
+    @Bind(R.id.frame_layout_color_bar) FrameLayout mColorBarFrameLayout;
+    @Bind(R.id.image_view_surface) ImageView mSurfaceImg;
+    @Bind(R.id.text_view_song_title) TextView mTitleTxt;
+    @Bind(R.id.text_view_song_artist) TextView mArtistTxt;
+    @Bind(R.id.recycler_view_play_history) RecyclerView mRecyclerView;
+    @Bind(R.id.fab) FloatingActionButton mFabBtn;
+
+    @Inject MainPresenterImpl mMainPresenter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
-        mAppBarLayout.addOnOffsetChangedListener(this);
-
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-
-        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
-        mCollapsingToolbarLayout.setClickable(false);
-
-        mColorBarFrameLayout = (FrameLayout) findViewById(R.id.frame_layout_color_bar);
-
-        mSurfaceImg = (ImageView) findViewById(R.id.image_view_surface);
-        mSurfaceImg.setLongClickable(true);
-
-        mTitleTxt = (TextView) findViewById(R.id.image_view_song_title);
-        mArtistTxt = (TextView) findViewById(R.id.image_view_song_artist);
-
-        mFabBtn = (FloatingActionButton) findViewById(R.id.fab);
-        mFabBtn.setOnClickListener(this);
-
+        mAppBarLayout.addOnOffsetChangedListener(this);
         mSurfaceImg.setOnTouchListener(this);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setAdapter(new MusicListAdapter());
+
         mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout, mToolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mMainPresenter = new MainPresenterImpl(this);
+        initInject();
+    }
+
+    private void initInject() {
+        getMainActivityComponent().inject(this);
+    }
+
+    protected MainActivityComponent getMainActivityComponent() {
+        return DaggerMainActivityComponent.builder()
+                .applicationComponent(getApplicationComponent())
+                .mainActivityModule(getMainActivityModule())
+                .build();
+    }
+
+    protected MainActivityModule getMainActivityModule() {
+        return new MainActivityModule(this);
+    }
+
+    protected ApplicationComponent getApplicationComponent() {
+        return DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(getApplication()))
+                .build();
     }
 
     @Override
@@ -136,7 +161,25 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_activity_main, menu);
-        return true;
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        SearchManager searchManager =
+                (SearchManager) MainActivity.this.getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = null;
+
+        if(searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+
+        if(searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(
+                    MainActivity.this.getComponentName()
+            ));
+        }
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -147,7 +190,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_channel_selector) {
+        if (id == R.id.action_search) {
             Toast.makeText(this, "MHz", Toast.LENGTH_SHORT).show();
             return true;
         }
@@ -186,20 +229,10 @@ public class MainActivity extends AppCompatActivity
         
     }
 
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab:
-                mMainPresenter.clickPlayButton();
-                break;
-            case R.id.image_view_surface:
-                break;
-            default:
-                break;
-        }
-
+    @OnClick(R.id.fab) void clickFloatingActionButton() {
+        mMainPresenter.clickPlayButton();
     }
+
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {

@@ -3,17 +3,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_channel_selector"
-        android:title="@string/action_channel_selector"
+        android:id="@+id/action_search"
         android:orderInCategory="100"
-        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
-        app:showAsAction="always" />
+        android:icon="@android:drawable/ic_menu_search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom"
+        android:title="Search"/>
 
     <item
         android:id="@+id/action_share"
         android:title="@string/action_share"
         android:orderInCategory="200"
         app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         />
 </menu>
